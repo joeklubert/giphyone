@@ -1,0 +1,102 @@
+
+
+
+
+
+		
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Moving Cars</title>
+
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+	<div id="buttons">
+  <button data-car="ford">FORD</button>
+  <button data-car="dodge">MOPAR</button>
+  <button data-car="cadillac">CADDIE</button>
+  	</div>
+  <div id="gifs-appear-here">
+  </div>
+
+	
+	<div id="submit">
+<!-- Could not figure out how to link to giphy to get search results!-->
+  	<form action= "queryURL";
+          method="get">
+  	 	
+
+  	<!--<button type="submit" value="Submit">Submit</button>
+	<button type="reset" value="Reset">Reset</button>-->
+         
+  Search cars:<br>
+  <input type="text">
+  <br><br>
+	<input type="submit" value="Submit">
+  	<input type="reset" value="Reset">
+	</form> 
+	</div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script type="text/javascript">
+    
+    $("button").on("click", function() {
+      
+      var topics = $(this).attr("data-car");
+      // changed giphy to stickers for animation.
+      var queryURL = "https://api.giphy.com/v1/stickers/search?q=" +
+        topics + "&api_key=dc6zaTOxFJmzC&limit=10";
+      
+      $.ajax({
+          url: queryURL,
+          method: "GET"
+        })
+        
+        .done(function(response) {
+          console.log(queryURL);
+          console.log(response);
+          
+          var results = response.data;
+          
+          for (var i = 0; i < results.length; i++) {
+            
+            var carDiv = $("<div>");
+            
+            var p = $("<p>").text("Rating: " + results[i].rating);
+            
+            var carImage = $("<img>");
+           
+            carImage.attr("src", results[i].images.fixed_height.url);
+            
+            
+            carDiv.append(p);
+            carDiv.append(carImage);
+            
+            $("#gifs-appear-here").prepend(carDiv);
+          }
+        });
+    });
+
+    // Atempted to create button on search, was not successful.
+
+    $("#gifs").on("click", function() {
+      // The attr jQuery method allows us to get or set the value of any attribute on our HTML element
+      var state = $(this).attr("data-state");
+      // If the clicked image's state is still, update its src attribute to what its data-animate value is.
+      // Then, set the image's data-state to animate
+      // Else set src to the data-still value
+      if (state === "still") {
+        $(this).attr("src", $(this).attr("data-animate"));
+        $(this).attr("data-state", "animate");
+      } else {
+        $(this).attr("src", $(this).attr("data-still"));
+        $(this).attr("data-state", "still");
+      }
+    });
+
+
+  </script>
+</body>
+</html>
